@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>חידון הארי פוטר</title>
 
 <style>
@@ -44,11 +43,12 @@ font-weight:bold;
 
 .small-btn{
 margin:10px;
-padding:8px 18px;
+padding:10px 22px;
 border:none;
-border-radius:7px;
+border-radius:10px;
 background:#00c6ff;
 cursor:pointer;
+font-weight:bold;
 }
 
 .answer{
@@ -80,43 +80,39 @@ font-size:20px;
 
 .hidden{display:none}
 
-/* ===== עיצוב סיום מקורי שלך ===== */
-#end {
-    text-align: center;
-    padding: 30px 20px;
-    max-width: 400px;
-    margin: 40px auto;
-    background: #1e1e1e;
-    color: #fff;
-    border-radius: 16px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
-    font-family: Arial, sans-serif;
+/* ===== סיום (משופר אבל בסגנון המקורי) ===== */
+#end{
+margin-top:20px;
+padding:20px;
+border-radius:14px;
+background:rgba(0,0,0,0.6);
 }
 
-#score {
-    font-size: 36px;
-    font-weight: bold;
-    margin: 15px 0;
-}
-
-#detail {
-    font-size: 15px;
-    margin-bottom: 10px;
-    opacity: 0.9;
-}
-
-#msg {
-    font-size: 20px;
-    margin-bottom: 20px;
-}
-
-.credit{
-position:fixed;
-bottom:10px;
-width:100%;
-text-align:center;
-font-size:20px;
+#score{
+font-size:38px;
 font-weight:bold;
+margin:15px 0;
+}
+
+#detail{
+margin:10px 0;
+opacity:0.9;
+}
+
+#msg{
+font-size:22px;
+margin-bottom:15px;
+}
+
+/* ===== טיימר ===== */
+#timerBig{
+display:none;
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+font-size:80px;
+z-index:999;
 }
 
 #timerSmall{
@@ -130,18 +126,37 @@ background:rgba(0,0,0,0.6);
 padding:8px 18px;
 border-radius:10px;
 }
+
+.history{
+margin-top:20px;
+background:#111;
+padding:10px;
+border-radius:10px;
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+padding:6px;
+border-bottom:1px solid #333;
+}
+
+.row.header{
+font-weight:bold;
+}
 </style>
 </head>
 
 <body>
 
+<div id="timerBig">00:00</div>
 <div id="timerSmall">00:00</div>
 
 <div class="container" id="box">
 
 <div id="start">
-<h1>הארי פוטר חידון כישופים נדירים #1</h1>
-<br><br>
+<h1>חידון כישופים נדירים ⚡</h1>
+<br>
 <button class="start-btn" onclick="startQuiz()">התחל חידון</button>
 </div>
 
@@ -154,24 +169,23 @@ border-radius:10px;
 </div>
 
 <div id="end" class="hidden">
-<h1>סיום החידון</h1>
+<h1>🏁 סיום החידון</h1>
 
 <div id="score"></div>
 <div id="msg"></div>
 <div id="detail"></div>
 <div id="time"></div>
 
-<input id="username" placeholder="הכנס את שמך">
-<br>
-<button onclick="shareScore()">שתף עם חברים</button>
-<button onclick="location.reload()">שחק שוב</button>
+<input id="username" placeholder="הכנס שם">
+<br><br>
 
-<div id="historyBox"></div>
+<button class="small-btn" onclick="shareScore()">שתף</button>
+<button class="small-btn" onclick="location.reload()">שחק שוב</button>
+
+<div id="historyBox" class="history"></div>
 </div>
 
 </div>
-
-<div class="credit">נוצר על ידי אריאל מאירי</div>
 
 <script>
 
@@ -184,6 +198,7 @@ document.getElementById("quiz").classList.remove("hidden")
 
 startTime=Date.now()
 timerInterval=setInterval(updateTimer,1000)
+
 document.getElementById("timerSmall").style.display="block"
 
 showQ()
@@ -197,6 +212,7 @@ let t=`${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`
 document.getElementById("timerSmall").innerText=t
 }
 
+/* שאלות משודרגות */
 const questions=[
 {q:"איזה כישוף יוצר להבה כחולה קפואה?",a:["אש קרחונית (Bluebell Flames)","אינצנדיו (Incendio)","לאקומורטיס (Locomotor Mortis)","אקוומנטי (Aguamenti)"],c:0},
 
@@ -261,7 +277,7 @@ if(n==correct) el.classList.add("correct")
 else el.classList.add("wrong")
 })
 
-if(index==correct)score+=20
+if(index==correct)score+=10
 else wrong++
 
 setTimeout(next,800)
@@ -283,7 +299,7 @@ document.getElementById("end").classList.remove("hidden")
 
 let time=document.getElementById("timerSmall").innerText
 
-// שליחה
+// שליחה רק אם עברו 15 שניות
 let parts=time.split(":")
 let total=parseInt(parts[0])*60+parseInt(parts[1])
 
@@ -296,8 +312,8 @@ document.getElementById("formSubmit").submit()
 
 // תוצאות
 document.getElementById("score").innerText=`🏆 ${score}/100`
-document.getElementById("detail").innerText=`✔ ${score/20} | ❌ ${wrong} | ⏭ ${skipped}`
-document.getElementById("time").innerText="⏱ זמן: "+time
+document.getElementById("detail").innerText=`✔ ${score/10} | ❌ ${wrong} | ⏭ ${skipped}`
+document.getElementById("time").innerText="⏱ "+time
 
 let msg=score>=80?"🔥 מצטיין!":score>=50?"👍 יפה!":"💪 נסה שוב"
 document.getElementById("msg").innerText=msg
@@ -310,12 +326,12 @@ localStorage.setItem("quizHistory",JSON.stringify(history))
 let box=document.getElementById("historyBox")
 box.innerHTML=""
 history.forEach((h,i)=>{
-box.innerHTML+=`<div>${i+1}. ${h.score} | ${h.time}</div>`
+box.innerHTML+=`<div class="row"><div>${i+1}</div><div>${h.score}</div><div>${h.time}</div></div>`
 })
 }
 
 function shareScore(){
-let text=`🏆 ${score}/100 ⏱ ${document.getElementById("timerSmall").innerText}`
+let text=`🏆 הציון שלי: ${score}/100 ⏱ זמן: ${document.getElementById("timerSmall").innerText}`
 window.open(`https://wa.me/?text=${encodeURIComponent(text)}`)
 }
 
