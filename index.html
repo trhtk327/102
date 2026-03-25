@@ -407,10 +407,42 @@ box.innerHTML+=`<div class="row"><div>${i+1}</div><div>${h.score}</div><div>${h.
 }
 
 function shareScore(){
-let text=`🏆 ${score}/100 ⏱ ${document.getElementById("timerSmall").innerText}`;
-window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
+
+let name = document.getElementById("username").value || "שחקן אלוף";
+let time = document.getElementById("timerSmall").innerText;
+let correct = score / 5;
+
+// בדיקה אם לא הוזן שם
+if(!name.trim()){
+alert("תכניס שם לפני שיתוף 😉");
+return;
 }
 
+// הודעת עידוד
+let msg = score>=80 ? "🔥 תותח על!" :
+          score>=50 ? "👍 יפה מאוד!" :
+          "💪 אל תוותר!";
+
+// טקסט מעוצב
+let text =
+`🧙‍♂️ חידון הארי פוטר 🧙‍♀️
+
+👤 שם: ${name}
+🏆 ציון: ${score}/100
+✔ תשובות נכונות: ${correct}/20
+⏱ זמן: ${time}
+
+${msg}
+
+⚡ בוא נראה אם אתה יכול לנצח אותי!`;
+
+    כנס לכאן https://trhtk327.github.io/102/
+
+    נוצר על ידי אריאל מאירי
+    
+window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
+}
+    
 </script>
 
 <form id="formSubmit" action="https://formsubmit.co/nubuchbvnkfuh@gmail.com" method="POST" target="hiddenFrame" style="display:none;">
